@@ -3,13 +3,16 @@ from cod_api import platforms
 from dotenv import load_dotenv
 import os
 
+"""Class that handles commands related to retrieving Call of Duty statistics"""
 class CODHandler():
     def __init__(self):
+        """Constructor"""
         load_dotenv()
         self.api = API()
         self.cod_login = os.getenv('COD_LOGIN')
     
     def change_time_format(self, minutes):
+        """Changes time from minutes to a string of days, hours, and minutes. Used to make the time played stat look nicer"""
         days = minutes // 1440
         minutes = minutes % 1440
         hours = minutes // 60
@@ -31,6 +34,7 @@ class CODHandler():
         return stats
     
     async def get_player_stats(self, game, username):
+        """Uses the COD api to retrieve stats for the player with the given username on the given game"""
         await self.api.loginAsync(self.cod_login)
         func = None
     
@@ -63,6 +67,7 @@ class CODHandler():
         except:
             return f'Sorry, but I wasn\'t able to find stats for **{username}** on **{game}**. Check to make sure there are not any typos in the provided username and that the username is not different on {game}'
     def format_cod_stats(self, stats, player, game):
+        """Formats the retrieved stats into a string"""
         response = f'Here\'s what I was able to find for **{player}** on **{game}**\n'
 
         for stat in stats:

@@ -6,7 +6,9 @@ import os
 
 
 class FantasyHandler():
+    """Class that handles retrieving fantasy football standings and statistics for my league"""
     def __init__(self):
+        """Constructor. Initializes the cookies and headers needed to access ESPN API"""
         load_dotenv()
         self.headers = {
             'Connection': os.getenv('FANTASY_HEADER_CONNECTION_VAL'),
@@ -22,6 +24,7 @@ class FantasyHandler():
         self.fantasy_url = os.getenv('FANTASY_URL')
 
     def remove_emojis(self, name):
+        """Removes emojis from the team name if they are present. This avoids different emoji unicodes across platforms"""
         for char in name:
             if emoji.is_emoji(char):
                 name = name.replace(char, "")
@@ -29,6 +32,7 @@ class FantasyHandler():
         return name
 
     async def get_standings(self):
+        """Retrieves the current standings for the fantasy league"""
         response = requests.get(self.fantasy_url, headers=self.headers, cookies=self.cookies)
         if not response or not response.status_code == 200:
             return 'Unable to retrieve fantasy standings'
@@ -46,6 +50,7 @@ class FantasyHandler():
         return self.format_fantasy_standings(rankings)
     
     async def get_stats(self, requested_team):
+        """Retrieves a select group of stats for a team in the fantasy football league"""
         response = requests.get(self.fantasy_url, headers=self.headers, cookies=self.cookies)
         data = response.json()
         teams = data['teams']
@@ -78,6 +83,7 @@ class FantasyHandler():
     
 
     def format_fantasy_standings(self, standings):
+        """Formats the fantasy football standings in a readable format to be returned as a string"""
         response = 'Here are the current fantasy football standings\n'
 
         for s in standings:
@@ -90,6 +96,7 @@ class FantasyHandler():
         return response
     
     def format_fantasy_stats(self, team, stats):
+        """Formats the fantasy football team stats in a readable format to be returned as a string"""
         response = f'Here are the stats for {team}\n'
         for item in stats:
             for stat, value in item.items():

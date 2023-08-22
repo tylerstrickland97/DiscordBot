@@ -3,7 +3,7 @@ from fantasy_handler import FantasyHandler
 
 
 class CommandHandler():
-
+    """Class that handles the commands sent by a user. It uses instances of the CODHandler and FantasyHandler to retrieve responses for different commands"""
     async def handle_cod_commands(self, sender, message_contents):
         bad_response = f'Sorry {sender}, but I cannot properly respond to that command. Use the command "!helpme" to receive a list of commands that I can respond to\n'
         if len(message_contents) < 3:
@@ -20,6 +20,7 @@ class CommandHandler():
         return stats
 
     async def handle_fantasy_commands(self, sender, message_contents):
+        """Function dedicated to handling any command related to fantasy football"""
         bad_response = f'Sorry {sender}, but I cannot properly respond to that command. Use the command "!helpme" to receive a list of commands that I can respond to\n'
         if len(message_contents) < 2:
             return bad_response
@@ -42,6 +43,7 @@ class CommandHandler():
             return bad_response
 
     async def handle_help_command(self, sender, message_contents):
+        """Function dedicated to handling the helpme command"""
         response = f'Hi {sender}, here are all of the possible commands you can give me\n\n'
 
         for cod in self._cods:
@@ -54,6 +56,7 @@ class CommandHandler():
         return response
 
     async def handle_commands(self, context):
+        """Function that parses the message sent by the user and determines which command the user is trying to access."""
         message_contents = context.message.content.split(' ')
         sender_mention = context.author.mention
         command = message_contents[0]
@@ -68,6 +71,7 @@ class CommandHandler():
             return response
 
     def __init__(self):
+        """Constructor"""
         self.cod_handler = CODHandler()
         self.fantasy_handler = FantasyHandler()
         self._cods = ["MW2", "Vanguard", "ColdWar", "MW2019", "Warzone"]
